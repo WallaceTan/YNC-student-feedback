@@ -80,17 +80,27 @@ label.question {
 	text-align: center;
 }
 
+.Yale-NUS-Blue_bg {
+	/* background-color: #004B8D; */
+	background-color: rgb(0,75,141);
+}
+
+.Yale-NUS-Orange_bg {
+	/* background-color: #F89829; */
+	background-color: rgb(248,151,40);
+}
 /** %[Object] Switch */
 /*------------------------------------*/
 .switch {
-	color: #6f839a;
+	color: #DDD;
 	cursor: pointer;
 	font-weight: 600;
 	line-height: 2.0em;
 	border-radius: 3px;
 	padding: 0.4em 0.8em;
 	display: inline-block;
-	background-color: #3e4956;
+	/* background-color: #3e4956; */
+	background-color: rgb(0,75,141);
 	-webkit-transition: .15s ease;
 	-moz-transition: .15s ease;
 	-ms-transition: .15s ease;
@@ -137,6 +147,6 @@ input[type="radio"]:checked + .switch--off {
 	background: #084d89;
 }
 
-#Q_C6A {
+#Q_C6A, #feeback_form {
 	display: none;
 }

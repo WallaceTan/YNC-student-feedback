@@ -12,7 +12,7 @@ var data = <?php echo json_encode($data); ?>;
 
 (function($) {
 
-	$(document).ready(function() {
+	$( document ).ready(function() {
 		// Populate courses select dropdown box
 		$.each(data, function ( index, value ) {
 			console.log( index + "  course: " + value.course + "  instructors: " + value.instructors + " Array.isArray(" + Array.isArray(value.instructors) + ")" + " Array length(" + value.instructors.length + ")");
@@ -20,18 +20,39 @@ var data = <?php echo json_encode($data); ?>;
 		});
 		// Attached onChange event to courses select dropdown box
 		$('#courses').change( function () {
-			set_instructors($(this).val(), data);
+			set_instructors( $(this).val(), data );
+			toggle_feeback_form( $(this).val() );
 		});
-		$('#courses').blur( function () {
-			set_instructors($(this).val(), data);
-		});
+//		$('#courses').blur( function () {
+//			set_instructors($(this).val(), data);
+//			toggle_feeback_form( $(this).val() );
+//		});
+
 		// Set focus to courses select dropdown box
 		$( "#courses" ).focus();
-		$( "#courses" ).blur();
+		// $( "#courses" ).blur();
+
+		$( "#Q_C6_1" ).click(function() {
+			$( "#Q_C6A" ).slideDown( "slow" );
+		});
+		$( "#Q_C6_2" ).click(function() {
+			$( "#Q_C6A" ).slideUp( "slow" );
+		});
 		
 	});
 
-	function set_instructors(id, data) {
+	function toggle_feeback_form( id ) {
+		if ( parseInt( id ) > 0 ) {
+			if ($( "#feeback_form" ).is( ":visible" )) {
+				$( "#feeback_form" ).hide();
+			}
+			$( "#feeback_form" ).slideDown( "slow" );
+		} else {
+			$( "#feeback_form" ).hide();
+		}
+	};
+
+	function set_instructors( id, data ) {
 		// find instructors 
 		$.each(data, function ( index, value ) {
 			if ( value.id == id ) {
@@ -42,21 +63,14 @@ var data = <?php echo json_encode($data); ?>;
 			}
 		});
 	}
-/*
-	$.each(data, function (i, val) {
-		bar = '<OPTGROUP LABEL="' + val.group + '">';      
-		$.each(val.zones, function(zoneID,zoneData) {
-			bar += '<OPTION VALUE="' + zoneData.value + '">' + zoneData.name + '</OPTION>';  
-		});
-		bar += '</OPTGROUP>';
-		$('#timeZones').append(bar);
-	});
-*/
+
 })(jQuery);
 </script>
-<!-- <h3 class="entry-subtitle">January - May, 2014:  Student Feedback on Learning Experience</h3> -->
 
-<p>Course Name: <select id="courses"></select></p>
+<form>
+<p>Course Name: <select id="courses"><option value="0">--- Please Select ---</option></select></p>
+
+<div id="feeback_form">
 <p id="instructors"></p>
 
 <p>Please answer the following questions honestly and completely.  The information you provide will be used to improve the structure and teaching of the course in the future.  It will also be used to assess and improve the teaching of the faculty and at the college in general.  The faculty will have access to your anonymous feedback only after the marking period is complete.  We appreciate your perspective on the course.</p>
@@ -77,7 +91,7 @@ var data = <?php echo json_encode($data); ?>;
 </div>
 
 <div id="SECTION_B" class="section">
-<div class="section-header">Part B:  Describe your effort in the class; please select one response.</div>
+<div class="section-header">Part B:  Describe your effort in the class;</div>
 
 <label for="Q_B1" class="question">1. Describe your effort in this course compared to others you have taken at Yale-NUS.</label>
 <input id="Q_B1_1" name="Q_B1" type="radio" value="1" hidden><label for="Q_B1_1" class="switch switch--off">Much less effort</label>
@@ -86,12 +100,12 @@ var data = <?php echo json_encode($data); ?>;
 <input id="Q_B1_4" name="Q_B1" type="radio" value="4" hidden><label for="Q_B1_4" class="switch switch--off">More effort</label>
 <input id="Q_B1_5" name="Q_B1" type="radio" value="5" hidden><label for="Q_B1_5" class="switch switch--off">Much more effort</label>
 
-<label for="Q_B2" class="question">2. How many hours did you spend on this course in a typical week, not including scheduled seminar or lecture time?</label>
+<label for="Q_B2" class="question">2. How many hours did you spend on this course in a typical week, <b>not</b> including scheduled seminar or lecture time?</label>
 Hours per week: <input id="Q_B2" name="Q_B2" type="text" value="" />
 </div>
 
 <div id="SECTION_C_I1" class="section">
-<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar instructor : __________ (need to specify name if two instructors in course).</div>
+<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar professor : __________ (need to specify name if two instructors in course).</div>
 
 <p>Express your level of agreement with the following statements:</p>
 
@@ -130,12 +144,12 @@ Hours per week: <input id="Q_B2" name="Q_B2" type="text" value="" />
 <input id="Q_C5_4" name="Q_C5" type="radio" value="4" hidden><label for="Q_C5_4" class="switch switch--off">Agree</label>
 <input id="Q_C5_5" name="Q_C5" type="radio" value="5" hidden><label for="Q_C5_5" class="switch switch--off">Strongly agree</label>
 
-<label for="Q_C6" class="question">6. Did you interact with the seminar professor outside of class?</label>
+<label for="Q_C6" class="question">6A. Did you interact with the seminar professor outside of class?</label>
 <input id="Q_C6_1" name="Q_C6" type="radio" value="1" hidden><label for="Q_C6_1" class="switch switch--off">YES</label>
 <input id="Q_C6_2" name="Q_C6" type="radio" value="2" hidden><label for="Q_C6_2" class="switch switch--off">NO</label>
 
 <div id="Q_C6A" class="question-set">
-<label for="Q_C6A" class="question">6A. Did you receive constructive assistance?</label>
+<label for="Q_C6A" class="question">6B. Did you receive constructive assistance?</label>
 <input id="Q_C6A_1" name="Q_C6A" type="radio" value="1" hidden /><label for="Q_C6A_1" class="switch switch--off">Strongly disagree</label>
 <input id="Q_C6A_2" name="Q_C6A" type="radio" value="2" hidden /><label for="Q_C6A_2" class="switch switch--off">Disagree</label>
 <input id="Q_C6A_3" name="Q_C6A" type="radio" value="3" hidden /><label for="Q_C6A_3" class="switch switch--off">Neutral</label>
@@ -152,22 +166,8 @@ Hours per week: <input id="Q_B2" name="Q_B2" type="text" value="" />
 
 <input type="submit" name="submit" value="Submit" class="btn bg_blue" />
 
-<script type="text/javascript">
-(function($) {
-	$( document ).ready(function() {
-		$( "#Q_C6_1" ).click(function() {
-			$( "#Q_C6A" ).show( "slow", function() {
-				// Animation complete.
-			});
-		});
-		$( "#Q_C6_2" ).click(function() {
-			$( "#Q_C6A" ).hide( "slow", function() {
-				// Animation complete.
-			});
-		});
-	});
-})(jQuery);
-</script>
+</div> <!--  -->
+</form>
 <!--
 <?php //selected( $selected, $current, $echo ); ?>
 $user_login : <?php echo $user_login; ?>

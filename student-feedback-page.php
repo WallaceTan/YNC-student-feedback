@@ -9,8 +9,8 @@
  * @since yalenus-microsite 0.1
  */
 if ( !is_user_logged_in() ) auth_redirect();
-add_action( 'wp_enqueue_scripts', 'ync_student_feedback_scripts' );
-add_action( 'wp_enqueue_scripts', 'student_feedback_styles' );
+//add_action( 'wp_enqueue_scripts', 'ync_student_feedback_scripts' );
+//add_action( 'wp_enqueue_scripts', 'ync_student_feedback_styles' );
 get_header();
 /*
 function get_template_part( $slug, $name = null ) {
@@ -68,6 +68,7 @@ if ( is_user_logged_in() ) {
 			<?php endwhile; endif; ?>
 <!--
 <pre>
+get_template_directory_uri() : <?php echo get_template_directory_uri()."\n"; ?>
 $user_login : <?php echo $user_login."\n"; ?>
 get_current_user_id() : <?php echo get_current_user_id()."\n"; ?>
 get_the_ID() : <?php echo get_the_ID()."\n"; ?>
