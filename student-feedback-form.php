@@ -20,6 +20,7 @@ var data = <?php echo json_encode($data); ?>;
 		});
 		// Attached onChange event to courses select dropdown box
 		$('#courses').change( function () {
+			$('#SECTION_C').empty();
 			set_instructors( $(this).val(), data );
 			toggle_feeback_form( $(this).val() );
 		});
@@ -32,12 +33,6 @@ var data = <?php echo json_encode($data); ?>;
 		$( "#courses" ).focus();
 		// $( "#courses" ).blur();
 
-		$( "#Q_C6_1" ).click(function() {
-			$( "#Q_C6A" ).slideDown( "slow" );
-		});
-		$( "#Q_C6_2" ).click(function() {
-			$( "#Q_C6A" ).slideUp( "slow" );
-		});
 		
 	});
 
@@ -56,46 +51,95 @@ var data = <?php echo json_encode($data); ?>;
 		// find instructors 
 		$.each(data, function ( index, value ) {
 			if ( value.id == id ) {
-				instructors = ( value.instructors.length > 1 ) ? "Seminar Professors: " : "Seminar Professor: ";
-				instructors += value.instructors;
+				if ( value.instructors.length == 1 ) {
+					// only 1 instructor
+					instructors = "Seminar Professor: " + value.instructors;
+					cloneSectionC( 1, value.instructors[0] );
+				} else if ( value.instructors.length > 1 ) {
+					// more then 1 instructor
+					instructors = "Seminar Professors: " + value.instructors.join(", ");
+					for (var i=0;i<value.instructors.length;i++) {
+						cloneSectionC( (i+1), value.instructors[i] );
+					}
+					
+				}
+				// instructors = ( value.instructors.length > 1 ) ? "Seminar Professors: " : "Seminar Professor: ";
+				// instructors += value.instructors;
 				$( "#instructors" ).text( instructors );
-				cloneSectionC( 1, instructors );
+				// cloneSectionC( 1, instructors );
 				return false;
 			}
 		});
 	}
 
 	// Clone Section C
-	function cloneSectionC( cloneIndex, professors ) {
-		// $("#SECTION_C_P0").clone().appendTo("#SECTION_C");
+	function cloneSectionC( cloneIndex, instructor ) {
 		var regex = /^Q_P(\d)+(.*)$/i;
 		$("#SECTION_C_P0").clone()
 			.appendTo("#SECTION_C")
 			.show()
 			.attr("id", "SECTION_C_P" + cloneIndex)
-			.find("*").each(function() {
-				var id = this.id || "";
-				var match = id.match(regex) || [];
-				if (match.length == 3) {
-					this.id = "Q_P" + (cloneIndex) + match[2];
+			.find( "input,div,span,label" ).each(function(index, element) {
+				switch (element.tagName) {
+					case 'LABEL':
+						var label_for = $(element).attr( "for" ) || "";
+						var matches = label_for.match(regex) || [];
+						if ( matches.length == 3 ) {
+							$(element).attr( "for", "Q_P" + cloneIndex + matches[2] );
+						}
+						break;
+					case 'SPAN':
+					case 'DIV':
+						var id_matches = element.id.match(regex) || [];
+						if ( id_matches.length == 3 ) {
+							element.id = "Q_P" + cloneIndex + id_matches[2];
+						}
+						break;
+					case 'INPUT':
+						var id_matches = element.id.match(regex) || [];
+						if ( id_matches.length == 3 ) {
+							element.id = "Q_P" + cloneIndex + id_matches[2];
+						}
+						var name_matches = element.name.match(regex) || [];
+						if ( name_matches.length == 3 ) {
+							element.name = "Q_P" + cloneIndex + name_matches[2];
+						}
+						break;
 				}
+				return;
 			});
-		cloneIndex++;
+		
+		// Default hide for Question 6B
+		$( "#Q_P" + cloneIndex + "_C6B" ).hide();
+		
+		// If Q6A=Yes, then show section Question 6B
+		$( "#Q_P" + cloneIndex + "_C6A_1" ).click(function() {
+			$( "#Q_P" + cloneIndex + "_C6B" ).slideDown( "slow" );
+		});
+		
+		// If Q6A=No, then hide section Question 6B
+		$( "#Q_P" + cloneIndex + "_C6A_2" ).click(function() {
+			$( "#Q_P" + cloneIndex + "_C6B" ).slideUp( "slow" );
+		});
+		console.log(instructor);
+		$("#Q_P" + cloneIndex + "_name").html(instructor);
+
 	};
+})(jQuery);
 /*
 <div id="SECTION_C_P0" class="section" style="display:none;">
-	<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar professor : <span id="Q_P0_NAME" class="professor"></span></div>
+<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar professor : <span id="Q_P0_name" class="professor"></span></div>
 
-	<p>Express your level of agreement with the following statements:</p>
+<input id="Q_P0_C_name" name="Q_P0_name" type="hidden" value=""> 
+<p>Express your level of agreement with the following statements:</p>
 
-	<label for="Q_P0_C1" class="question">1. The seminar professor helped me understand course concepts.</label>
-	<input id="Q_P0_C1_1" name="Q_P0_C1" type="radio" value="1" hidden><label for="Q_P0_C1_1" class="switch switch--off">Strongly disagree</label>
-	<input id="Q_P0_C1_2" name="Q_P0_C1" type="radio" value="2" hidden><label for="Q_P0_C1_2" class="switch switch--off">Disagree</label>
-	<input id="Q_P0_C1_3" name="Q_P0_C1" type="radio" value="3" hidden><label for="Q_P0_C1_3" class="switch switch--off">Neutral</label>
-	<input id="Q_P0_C1_4" name="Q_P0_C1" type="radio" value="4" hidden><label for="Q_P0_C1_4" class="switch switch--off">Agree</label>
-	<input id="Q_P0_C1_5" name="Q_P0_C1" type="radio" value="5" hidden><label for="Q_P0_C1_5" class="switch switch--off">Strongly agree</label>
-*/	
-})(jQuery);
+<label for="Q_P0_C1" class="question">1. The seminar professor helped me understand course concepts.</label>
+<input id="Q_P0_C1_1" name="Q_P0_C1" type="radio" value="1" hidden><label for="Q_P0_C1_1" class="switch switch--off">Strongly disagree</label>
+<input id="Q_P0_C1_2" name="Q_P0_C1" type="radio" value="2" hidden><label for="Q_P0_C1_2" class="switch switch--off">Disagree</label>
+<input id="Q_P0_C1_3" name="Q_P0_C1" type="radio" value="3" hidden><label for="Q_P0_C1_3" class="switch switch--off">Neutral</label>
+<input id="Q_P0_C1_4" name="Q_P0_C1" type="radio" value="4" hidden><label for="Q_P0_C1_4" class="switch switch--off">Agree</label>
+<input id="Q_P0_C1_5" name="Q_P0_C1" type="radio" value="5" hidden><label for="Q_P0_C1_5" class="switch switch--off">Strongly agree</label>
+*/
 </script>
 
 <form name="student-feeback-form" method="POST" action="">
@@ -150,8 +194,8 @@ Hours per week: <input id="Q_B2" name="Q_B2" type="text" value="" />
 </form>
 <!-- START : Hidden Section C -->
 <div id="SECTION_C_P0" class="section" style="display:none;">
-<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar professor : <span id="Q_P0_NAME" class="professor"></span></div>
-
+<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar professor : <span id="Q_P0_name" class="professor"></span></div>
+<input id="Q_P0_C_name" name="Q_P0_name" type="hidden" value=""> 
 <p>Express your level of agreement with the following statements:</p>
 
 <label for="Q_P0_C1" class="question">1. The seminar professor helped me understand course concepts.</label>
@@ -189,20 +233,19 @@ Hours per week: <input id="Q_B2" name="Q_B2" type="text" value="" />
 <input id="Q_P0_C5_4" name="Q_P0_C5" type="radio" value="4" hidden><label for="Q_P0_C5_4" class="switch switch--off">Agree</label>
 <input id="Q_P0_C5_5" name="Q_P0_C5" type="radio" value="5" hidden><label for="Q_P0_C5_5" class="switch switch--off">Strongly agree</label>
 
-<label for="Q_P0_C6" class="question">6A. Did you interact with the seminar professor outside of class?</label>
-<input id="Q_P0_C6_1" name="Q_P0_C6" type="radio" value="1" hidden><label for="Q_P0_C6_1" class="switch switch--off">YES</label>
-<input id="Q_P0_C6_2" name="Q_P0_C6" type="radio" value="2" hidden><label for="Q_P0_C6_2" class="switch switch--off">NO</label>
+<label for="Q_P0_C6A" class="question">6A. Did you interact with the seminar professor outside of class?</label>
+<input id="Q_P0_C6A_1" name="Q_P0_C6A" type="radio" value="1" hidden><label for="Q_P0_C6A_1" class="switch switch--off">YES</label>
+<input id="Q_P0_C6A_2" name="Q_P0_C6A" type="radio" value="0" hidden><label for="Q_P0_C6A_2" class="switch switch--off">NO</label>
 
-<div id="Q_P0_C6A" class="question-set">
-<label for="Q_P0_C6A" class="question">6B. Did you receive constructive assistance?</label>
-<input id="Q_P0_C6A_1" name="Q_P0_C6A" type="radio" value="1" hidden /><label for="Q_P0_C6A_1" class="switch switch--off">Strongly disagree</label>
-<input id="Q_P0_C6A_2" name="Q_P0_C6A" type="radio" value="2" hidden /><label for="Q_P0_C6A_2" class="switch switch--off">Disagree</label>
-<input id="Q_P0_C6A_3" name="Q_P0_C6A" type="radio" value="3" hidden /><label for="Q_P0_C6A_3" class="switch switch--off">Neutral</label>
-<input id="Q_P0_C6A_4" name="Q_P0_C6A" type="radio" value="4" hidden /><label for="Q_P0_C6A_4" class="switch switch--off">Agree</label>
-<input id="Q_P0_C6A_5" name="Q_P0_C6A" type="radio" value="5" hidden /><label for="Q_P0_C6A_5" class="switch switch--off">Strongly agree</label>
+<div id="Q_P0_C6B" class="question-set">
+<label for="Q_P0_C6B" class="question">6B. Did you receive constructive assistance?</label>
+<input id="Q_P0_C6B_1" name="Q_P0_C6B" type="radio" value="1" hidden /><label for="Q_P0_C6B_1" class="switch switch--off">Strongly disagree</label>
+<input id="Q_P0_C6B_2" name="Q_P0_C6B" type="radio" value="2" hidden /><label for="Q_P0_C6B_2" class="switch switch--off">Disagree</label>
+<input id="Q_P0_C6B_3" name="Q_P0_C6B" type="radio" value="3" hidden /><label for="Q_P0_C6B_3" class="switch switch--off">Neutral</label>
+<input id="Q_P0_C6B_4" name="Q_P0_C6B" type="radio" value="4" hidden /><label for="Q_P0_C6B_4" class="switch switch--off">Agree</label>
+<input id="Q_P0_C6B_5" name="Q_P0_C6B" type="radio" value="5" hidden /><label for="Q_P0_C6B_5" class="switch switch--off">Strongly agree</label>
 </div>
 </div>
-<!-- END : Hidden Section C -->
 
 <!--
 <?php //selected( $selected, $current, $echo ); ?>
