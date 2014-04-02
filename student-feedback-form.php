@@ -59,15 +59,46 @@ var data = <?php echo json_encode($data); ?>;
 				instructors = ( value.instructors.length > 1 ) ? "Seminar Professors: " : "Seminar Professor: ";
 				instructors += value.instructors;
 				$( "#instructors" ).text( instructors );
+				cloneSectionC( 1, instructors );
 				return false;
 			}
 		});
 	}
 
+	// Clone Section C
+	function cloneSectionC( cloneIndex, professors ) {
+		// $("#SECTION_C_P0").clone().appendTo("#SECTION_C");
+		var regex = /^Q_P(\d)+(.*)$/i;
+		$("#SECTION_C_P0").clone()
+			.appendTo("#SECTION_C")
+			.show()
+			.attr("id", "SECTION_C_P" + cloneIndex)
+			.find("*").each(function() {
+				var id = this.id || "";
+				var match = id.match(regex) || [];
+				if (match.length == 3) {
+					this.id = "Q_P" + (cloneIndex) + match[2];
+				}
+			});
+		cloneIndex++;
+	};
+/*
+<div id="SECTION_C_P0" class="section" style="display:none;">
+	<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar professor : <span id="Q_P0_NAME" class="professor"></span></div>
+
+	<p>Express your level of agreement with the following statements:</p>
+
+	<label for="Q_P0_C1" class="question">1. The seminar professor helped me understand course concepts.</label>
+	<input id="Q_P0_C1_1" name="Q_P0_C1" type="radio" value="1" hidden><label for="Q_P0_C1_1" class="switch switch--off">Strongly disagree</label>
+	<input id="Q_P0_C1_2" name="Q_P0_C1" type="radio" value="2" hidden><label for="Q_P0_C1_2" class="switch switch--off">Disagree</label>
+	<input id="Q_P0_C1_3" name="Q_P0_C1" type="radio" value="3" hidden><label for="Q_P0_C1_3" class="switch switch--off">Neutral</label>
+	<input id="Q_P0_C1_4" name="Q_P0_C1" type="radio" value="4" hidden><label for="Q_P0_C1_4" class="switch switch--off">Agree</label>
+	<input id="Q_P0_C1_5" name="Q_P0_C1" type="radio" value="5" hidden><label for="Q_P0_C1_5" class="switch switch--off">Strongly agree</label>
+*/	
 })(jQuery);
 </script>
 
-<form>
+<form name="student-feeback-form" method="POST" action="">
 <p>Course Name: <select id="courses"><option value="0">--- Please Select ---</option></select></p>
 
 <div id="feeback_form">
@@ -104,8 +135,22 @@ var data = <?php echo json_encode($data); ?>;
 Hours per week: <input id="Q_B2" name="Q_B2" type="text" value="" />
 </div>
 
-<div id="SECTION_C_P0" class="section">
-<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar professor : __________ (need to specify name if two instructors in course).</div>
+<div id="SECTION_C" class="section">
+</div>
+
+<div id="SECTION_D" class="section">
+<div class="section-header">Part D</div>
+<label for="Q_D1">Please use this space to elaborate on your previous responses or to address other issues such as classroom atmosphere; most or least helpful course materials, readings, or topics; or any other specific suggestions or concerns about the course.</label>
+<textarea id="Q_D1" name="Q_D1" cols="120" rows="6"></textarea>
+</div>
+
+<input type="submit" name="submit" value="Submit" class="btn bg_blue" />
+
+</div> <!-- <div id="feeback_form"> -->
+</form>
+<!-- START : Hidden Section C -->
+<div id="SECTION_C_P0" class="section" style="display:none;">
+<div class="section-header">Part C: Describe aspects of the course related specifically to your seminar professor : <span id="Q_P0_NAME" class="professor"></span></div>
 
 <p>Express your level of agreement with the following statements:</p>
 
@@ -157,17 +202,8 @@ Hours per week: <input id="Q_B2" name="Q_B2" type="text" value="" />
 <input id="Q_P0_C6A_5" name="Q_P0_C6A" type="radio" value="5" hidden /><label for="Q_P0_C6A_5" class="switch switch--off">Strongly agree</label>
 </div>
 </div>
+<!-- END : Hidden Section C -->
 
-<div id="SECTION_D" class="section">
-<div class="section-header">Part D</div>
-<label for="Q_D1">Please use this space to elaborate on your previous responses or to address other issues such as classroom atmosphere; most or least helpful course materials, readings, or topics; or any other specific suggestions or concerns about the course.</label>
-<textarea id="Q_D1" name="Q_D1" cols="120" rows="6"></textarea>
-</div>
-
-<input type="submit" name="submit" value="Submit" class="btn bg_blue" />
-
-</div> <!--  -->
-</form>
 <!--
 <?php //selected( $selected, $current, $echo ); ?>
 $user_login : <?php echo $user_login; ?>

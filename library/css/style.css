@@ -28,7 +28,7 @@ ROBOCOPY C:\Projects\Yale-NUS\Wordpress\yalenuscourses\wp-content\themes\yalenus
   padding: 30px 120px;
 }
 
-h2 {
+h2, .professor {
 	font-weight: bold;
 }
 
