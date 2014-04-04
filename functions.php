@@ -74,9 +74,9 @@ function ync_student_feedback_styles() {
 
 function get_student_courses($user_login, $completed = 0) {
 	global $wpdb;
-	$table = $wpdb->prefix . 'student_courses';
-	$sql =  "SELECT * FROM `$table` WHERE `student_id` REGEXP '^{$user_login}[a-zA-Z]?$';";
-	echo "sql : " . $sql."\n";
+	$student_courses = $wpdb->prefix . 'student_courses';
+	$teaching_evaluation = $wpdb->prefix . 'teaching_evaluation';
+	$sql =  "SELECT S.* FROM `$student_courses` AS S LEFT JOIN `$teaching_evaluation` AS T ON (S.id=T.student_course_id) WHERE T.student_course_id IS NULL AND S.student_id REGEXP '^{$user_login}[a-zA-Z]?$';";
 	$students = $wpdb->get_results( $sql );
 	$data = array();
 	foreach ($students as $student) {
@@ -91,37 +91,60 @@ function get_student_courses($user_login, $completed = 0) {
 function insert_teaching_evaluation() {
 	global $wpdb;
 	$table = $wpdb->prefix . 'teaching_evaluation';
-	$count_sql = "SELECT COUNT(*) FROM `$table` WHERE student_course_id=%d";
-	$insert_sql = "INSERT INTO `$table` (student_course_id,professor,A1,A2,A3,B1,B2,C1,C2,C3,C4,C5,C6A,C6B,D1,created) VALUES (%d,%s,%s,%s,%d,%s,%s,%d,%d,%d,%d,%d,%d,%d,%s,NOW())";
 	$i = 1;
 
-	while ( isset($_POST["P{$i}_name"]) && !empty($_POST["P{$i}_name"]) ) {
+//<input id="course" name="course" type="hidden" value="YCC1132: Integrated Science">
+	if ( $_POST["course"] == "YCC1132: Integrated Science" ) {
+		// Ugly hack: Section C or P{$i}_name is missing
 		$data["student_course_id"] = $_POST["student_course_id"];
-		$data["professor"] = $_POST["P{$i}_name"];
+		$data["course"] = $_POST["course"];
 		$data["A1"] = $_POST["A1"];
 		$data["A2"] = $_POST["A2"];
 		$data["A3"] = $_POST["A3"];
 		$data["B1"] = $_POST["B1"];
 		$data["B2"] = $_POST["B2"];
-		$data["C1"] = $_POST["P{$i}_C1"];
-		$data["C2"] = $_POST["P{$i}_C2"];
-		$data["C3"] = $_POST["P{$i}_C3"];
-		$data["C4"] = $_POST["P{$i}_C4"];
-		$data["C5"] = $_POST["P{$i}_C5"];
-		$data["C6a"] = $_POST["P{$i}_C6a"];
-		$data["C6b"] = $_POST["P{$i}_C6b"];
 		$data["D1"] = $_POST["D1"];
 
-		if ($data["C6a"] == 0) $data["C6b"] = 0;
-
-		$sql = $wpdb->prepare($count_sql, $data["student_course_id"], $data["professor"]);
-		echo "<p>sql : {$sql}</p>";
+		$count_sql = "SELECT COUNT(*) FROM `$table` WHERE student_course_id=%d";
+		$insert_sql = "INSERT INTO `$table` (student_course_id,course,A1,A2,A3,B1,B2,D1,created) VALUES (%d,%s,%s,%s,%s,%d,%s,%s,NOW())";
+		$sql = $wpdb->prepare($count_sql, $data["student_course_id"]);
+echo "<p>sql : {$sql}</p>";
 		$count = $wpdb->get_var( $sql );
-		echo "<p>count : {$count}</p>";
+echo "<p>count : {$count}</p>";
+		if ( $count == 0 ) {
+			$sql = $wpdb->prepare($insert_sql, $data);
+echo "<p>sql : {$sql}</p>";
+			$wpdb->query( $sql );
+		}
+	} else {
+		$count_sql = "SELECT COUNT(*) FROM `$table` WHERE student_course_id=%d AND instructor=%s";
+		$insert_sql = "INSERT INTO `$table` (student_course_id,course,instructor,A1,A2,A3,B1,B2,C1,C2,C3,C4,C5,C6A,C6B,D1,created) VALUES (%d,%s,%s,%s,%s,%s,%d,%s,%d,%d,%d,%d,%d,%d,%d,%s,NOW())";
+		while ( isset($_POST["P{$i}_name"]) && !empty($_POST["P{$i}_name"]) ) {
+			$data["student_course_id"] = $_POST["student_course_id"];
+			$data["instructor"] = $_POST["P{$i}_name"];
+			$data["A1"] = $_POST["A1"];
+			$data["A2"] = $_POST["A2"];
+			$data["A3"] = $_POST["A3"];
+			$data["B1"] = $_POST["B1"];
+			$data["B2"] = $_POST["B2"];
+			$data["C1"] = $_POST["P{$i}_C1"];
+			$data["C2"] = $_POST["P{$i}_C2"];
+			$data["C3"] = $_POST["P{$i}_C3"];
+			$data["C4"] = $_POST["P{$i}_C4"];
+			$data["C5"] = $_POST["P{$i}_C5"];
+			$data["C6a"] = $_POST["P{$i}_C6a"];
+			$data["C6b"] = $_POST["P{$i}_C6b"];
+			$data["D1"] = $_POST["D1"];
 
-		$sql = $wpdb->prepare($insert_sql, $data);
-		echo "<p>sql : {$sql}</p>";
-		$wpdb->query( $sql );
-		$i++;
+			if ($data["C6a"] == 0) $data["C6b"] = 0;
+
+			$sql = $wpdb->prepare($count_sql, $data["student_course_id"], $data["instructor"]);
+			$count = $wpdb->get_var( $sql );
+			if ( $count == 0 ) {
+				$sql = $wpdb->prepare($insert_sql, $data);
+				$wpdb->query( $sql );
+			}
+			$i++;
+		}
 	}
 }

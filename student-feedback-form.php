@@ -15,12 +15,11 @@ var data = <?php echo json_encode($student_courses); ?>;
 	$( document ).ready(function() {
 		// Populate courses select dropdown box
 		$.each(data, function ( index, value ) {
-			console.log( index + "  course: " + value.course + "  instructors: " + value.instructors + " Array.isArray(" + Array.isArray(value.instructors) + ")" + " Array length(" + value.instructors.length + ")");
+			// console.log( index + "  course: " + value.course + "  instructors: " + value.instructors + " Array.isArray(" + Array.isArray(value.instructors) + ")" + " Array length(" + value.instructors.length + ")");
 			$('#courses').append('<option value="' + value.id + '">' + value.course + '</option>');
 		});
 		// Attached onChange event to courses select dropdown box
 		$('#courses').change( function () {
-			$('#SECTION_C').empty();
 			$('#SECTION_C').html('');
 			set_instructors( $(this).val(), data );
 			toggle_feeback_form( $(this).val() );
@@ -46,16 +45,22 @@ var data = <?php echo json_encode($student_courses); ?>;
 			if ( value.id == id ) {
 				if ( value.instructors.length == 1 ) {
 					// only 1 instructor
-					instructors = "Seminar Professor: " + value.instructors;
-					cloneSectionC( 1, value.instructors[0] );
+					instructors_list = "";
+					// if name of instructor is not empty string, display Section C
+					if (value.instructors[0].length > 0) {
+						instructors_list = "Seminar Professor: " + value.instructors[0];
+						cloneSectionC( 1, value.instructors[0] );
+					}
 				} else if ( value.instructors.length > 1 ) {
 					// more then 1 instructor
-					instructors = "Seminar Professors: " + value.instructors.join(", ");
+					instructors_list = "Seminar Professors: " + value.instructors.join(", ");
 					for (var i=0;i<value.instructors.length;i++) {
 						cloneSectionC( (i+1), value.instructors[i] );
 					}
 				}
-				$( "#instructors" ).text( instructors );
+				$( "#instructors" ).text( instructors_list );
+				// Set course hidden input
+				$("#course").val( value.course );
 				return false;
 			}
 		});
@@ -123,8 +128,8 @@ var data = <?php echo json_encode($student_courses); ?>;
 
 <form name="student-feeback-form" method="POST" action="">
 <p>Course Name: <select id="courses" name="student_course_id"><option value="0">--- Please Select ---</option></select></p>
-
 <div id="feeback_form">
+<input id="course" name="course" type="hidden" value="">
 <p id="instructors"></p>
 
 <p>Please answer the following questions honestly and completely.  The information you provide will be used to improve the structure and teaching of the course in the future.  It will also be used to assess and improve the teaching of the faculty and at the college in general.  The faculty will have access to your anonymous feedback only after the marking period is complete.  We appreciate your perspective on the course.</p>

@@ -39,7 +39,7 @@ function comments_template( $file = '/comments.php', $separate_comments = false 
 ?>
 <?php
 $user_id = $_GET['user_id'];
-echo "user_id : " . $user_id."\n";
+// echo "user_id : " . $user_id."\n";
 if ( is_user_logged_in() ) {
 	if ( empty($user_id) ) {
 		$student_courses = get_student_courses($user_login); // 'A0109187'
@@ -61,41 +61,46 @@ if ( is_user_logged_in() ) {
 					<?php //get_template_part( 'student-feedback-form' ); ?>
 					<?php include(locate_template('student-feedback-form.php')); ?>
 				<?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') : ?>
-					Thank you for completing this feedback form.
-					
-					<a href="<?php echo wp_logout_url(); ?>" title="Logout">Logout</a>
-					<pre>
+					<p>Thank you for completing this feedback form.</p>
+					<p><a href="<?php echo wp_logout_url($_SERVER['REQUEST_URI']); ?>" title="Logout">Logout</a></p>
 <?php
-insert_teaching_evaluation();
 /*
 print_r($_POST);
 Array
 (
-    [Q_A1] => Test Part A Q1
-    [Q_A2] => Test Part A Q2
-    [Q_A3] => Test Part A Q3
-    [Q_B1] => 1
-    [Q_B2] => around five hours a week
-    [Q_P1_C_name] => Dr Ang Tsu Lyn, Claudine
-    [Q_P1_C1] => 5
-    [Q_P1_C2] => 4
-    [Q_P1_C3] => 3
-    [Q_P1_C4] => 2
-    [Q_P1_C5] => 1
-    [Q_P1_C6A] => 0
-    [Q_P1_C6B] => 2
-    [Q_D1] => Test Part D Q1
+    [student_course_id] => 620
+    [course] => YHU1204: Rise and Fall of the British Empire
+    [A1] => Test A1
+    [A2] => A2
+    [A3] => A3
+    [B1] => 1
+    [B2] => 4
+    [P1_name] => Jessica Ratcliff
+    [P1_C1] => 1
+    [P1_C2] => 2
+    [P1_C3] => 3
+    [P1_C4] => 4
+    [P1_C5] => 5
+    [P1_C6a] => 1
+    [P1_C6b] => 2
+    [P2_name] => Jessica Hanser
+    [P2_C1] => 1
+    [P2_C2] => 2
+    [P2_C3] => 3
+    [P2_C4] => 4
+    [P2_C5] => 5
+    [P2_C6a] => 0
+    [D1] => Test D
     [submit] => Submit
 )
 */
-					?></pre>
+insert_teaching_evaluation();
+?>
 				<?php endif ?>
 			<?php else: ?>
-				<p>Unable to retrieve student : <?php echo $user_login; ?></p>
-				<p>Try <a href="<?php echo(current_page_url() . "?user_id=A0109187"); ?>"><?php echo(current_page_url() . "?user_id=A0109187"); ?></a></p>
+				<p>All evaluations completed!</p>
 			<?php endif ?>
 			
-			<!-- <div id="form1"></div> -->
 			<!-- Stop The Loop. -->
 			<?php endwhile; endif; ?>
 <!--
