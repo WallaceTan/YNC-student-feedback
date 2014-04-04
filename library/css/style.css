@@ -28,8 +28,13 @@ ROBOCOPY C:\Projects\Yale-NUS\Wordpress\yalenuscourses\wp-content\themes\yalenus
   padding: 30px 120px;
 }
 
-h2, .professor {
+h2 {
 	font-weight: bold;
+}
+
+.professor {
+	font-weight: bold;
+	color: #FFF;
 }
 
 .title {
