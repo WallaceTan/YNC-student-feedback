@@ -93,9 +93,11 @@ function insert_teaching_evaluation() {
 	$table = $wpdb->prefix . 'teaching_evaluation';
 	$i = 1;
 
+// Ugly hack: Section C or P{$i}_name is missing, if (course == YCC1132: Integrated Science)
 //<input id="course" name="course" type="hidden" value="YCC1132: Integrated Science">
 	if ( $_POST["course"] == "YCC1132: Integrated Science" ) {
-		// Ugly hack: Section C or P{$i}_name is missing
+		$count_sql = "SELECT COUNT(*) FROM `$table` WHERE student_course_id=%d AND course=%s";
+		$insert_sql = "INSERT INTO `$table` (student_course_id,course,A1,A2,A3,B1,B2,D1,created) VALUES (%d,%s,%s,%s,%s,%d,%s,%s,NOW())";
 		$data["student_course_id"] = $_POST["student_course_id"];
 		$data["course"] = $_POST["course"];
 		$data["A1"] = $_POST["A1"];
@@ -105,15 +107,10 @@ function insert_teaching_evaluation() {
 		$data["B2"] = $_POST["B2"];
 		$data["D1"] = $_POST["D1"];
 
-		$count_sql = "SELECT COUNT(*) FROM `$table` WHERE student_course_id=%d";
-		$insert_sql = "INSERT INTO `$table` (student_course_id,course,A1,A2,A3,B1,B2,D1,created) VALUES (%d,%s,%s,%s,%s,%d,%s,%s,NOW())";
-		$sql = $wpdb->prepare($count_sql, $data["student_course_id"]);
-echo "<p>sql : {$sql}</p>";
+		$sql = $wpdb->prepare($count_sql, $data["student_course_id"], $data["course"]);
 		$count = $wpdb->get_var( $sql );
-echo "<p>count : {$count}</p>";
 		if ( $count == 0 ) {
 			$sql = $wpdb->prepare($insert_sql, $data);
-echo "<p>sql : {$sql}</p>";
 			$wpdb->query( $sql );
 		}
 	} else {
@@ -121,6 +118,7 @@ echo "<p>sql : {$sql}</p>";
 		$insert_sql = "INSERT INTO `$table` (student_course_id,course,instructor,A1,A2,A3,B1,B2,C1,C2,C3,C4,C5,C6A,C6B,D1,created) VALUES (%d,%s,%s,%s,%s,%s,%d,%s,%d,%d,%d,%d,%d,%d,%d,%s,NOW())";
 		while ( isset($_POST["P{$i}_name"]) && !empty($_POST["P{$i}_name"]) ) {
 			$data["student_course_id"] = $_POST["student_course_id"];
+			$data["course"] = $_POST["course"];
 			$data["instructor"] = $_POST["P{$i}_name"];
 			$data["A1"] = $_POST["A1"];
 			$data["A2"] = $_POST["A2"];
