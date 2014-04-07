@@ -103,7 +103,7 @@ function insert_teaching_evaluation() {
 		$data["A1"] = $_POST["A1"];
 		$data["A2"] = $_POST["A2"];
 		$data["A3"] = $_POST["A3"];
-		$data["B1"] = $_POST["B1"];
+		$data["B1"] = ( ($_POST["B1"]) ? $_POST["B1"] : 99 );
 		$data["B2"] = $_POST["B2"];
 		$data["D1"] = $_POST["D1"];
 
@@ -123,15 +123,15 @@ function insert_teaching_evaluation() {
 			$data["A1"] = $_POST["A1"];
 			$data["A2"] = $_POST["A2"];
 			$data["A3"] = $_POST["A3"];
-			$data["B1"] = $_POST["B1"];
+			$data["B1"] = ( ($_POST["B1"]) ? $_POST["B1"] : 99 );
 			$data["B2"] = $_POST["B2"];
-			$data["C1"] = $_POST["P{$i}_C1"];
-			$data["C2"] = $_POST["P{$i}_C2"];
-			$data["C3"] = $_POST["P{$i}_C3"];
-			$data["C4"] = $_POST["P{$i}_C4"];
-			$data["C5"] = $_POST["P{$i}_C5"];
-			$data["C6a"] = $_POST["P{$i}_C6a"];
-			$data["C6b"] = $_POST["P{$i}_C6b"];
+			$data["C1"] = ( ($_POST["P{$i}_C1"]) ? $_POST["P{$i}_C1"] : 99 );
+			$data["C2"] = ( ($_POST["P{$i}_C2"]) ? $_POST["P{$i}_C2"] : 99 );
+			$data["C3"] = ( ($_POST["P{$i}_C3"]) ? $_POST["P{$i}_C3"] : 99 );
+			$data["C4"] = ( ($_POST["P{$i}_C4"]) ? $_POST["P{$i}_C4"] : 99 );
+			$data["C5"] = ( ($_POST["P{$i}_C5"]) ? $_POST["P{$i}_C5"] : 99 );
+			$data["C6a"] = ( ($_POST["P{$i}_C6a"]) ? $_POST["P{$i}_C6a"] : 99 );
+			$data["C6b"] = ( ($_POST["P{$i}_C6b"]) ? $_POST["P{$i}_C6b"] : 99 );
 			$data["D1"] = $_POST["D1"];
 
 			if ($data["C6a"] == 0) $data["C6b"] = 0;

@@ -132,7 +132,7 @@ var data = <?php echo json_encode($student_courses); ?>;
 <input id="course" name="course" type="hidden" value="">
 <p id="instructors"></p>
 
-<p>Please answer the following questions honestly and completely.  The information you provide will be used to improve the structure and teaching of the course in the future.  It will also be used to assess and improve the teaching of the faculty and at the college in general.  The faculty will have access to your anonymous feedback only after the marking period is complete.  We appreciate your perspective on the course.</p>
+<p>Please answer the following questions honestly and completely.  The information you provide will be used to improve the structure and teaching of the course in the future.  It will also be used to assess and improve the teaching of the faculty and at the College in general.  The faculty will have access to your anonymous feedback only after the marking period is complete.  We appreciate your perspective on the course.</p>
 
 <p>In LH2 and PPT2, the lecture refers to the parts of the course at which all students were present.  The seminar refers to the parts of your course involving only your (smaller) seminar group. For all other courses there is no distinction between lecture and seminar.</p>
 
@@ -150,7 +150,7 @@ var data = <?php echo json_encode($student_courses); ?>;
 </div>
 
 <div id="SECTION_B" class="section">
-<div class="section-header">Part B:  Describe your effort in the class;</div>
+<div class="section-header">Part B:  Describe your effort in the class</div>
 
 <label for="B1" class="question">1. Describe your effort in this course compared to others you have taken at Yale-NUS.</label>
 <input id="B1_1" name="B1" type="radio" value="1" hidden><label for="B1_1" class="switch switch--off">Much less effort</label>
