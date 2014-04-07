@@ -1,0 +1,40 @@
+.course-feedback-list > ul {
+	width: 48%;
+	border: 1px solid #004B8D;
+	border-radius: 3px;
+	padding: 20px 20px;
+	margin-bottom: 0px !important; 
+	display: inline-block;
+	list-style-type: none;
+	background-color: #EEE;
+	background-color: rgba(102, 102, 102,0.05);
+}
+
+.course-feedback-list > ul:nth-child(odd) {
+	margin-right: 20px;
+}
+
+.course-feedback-list > ul > li h4 {
+	margin-bottom: 5px !important;
+}
+
+.course-feedback-list > ul > li h5 {
+	color: #999 !important;
+}
+
+.course-feedback-list > ul > li h4 {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space:nowrap;
+}
+
+.course-feedback-list > ul:hover {
+	border: 1px solid #FB9829;
+	background-color: #FB9829;
+}
+
+.course-feedback-list > ul:hover > li h5 {
+		color: #FFF !important;
+		cursor: pointer;
+	}
+}

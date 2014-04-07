@@ -72,7 +72,7 @@ function ync_student_feedback_styles() {
 	wp_enqueue_style( 'student-feedback-style' );
 }
 
-function get_student_courses($user_login, $completed = 0) {
+function get_student_courses($user_login) {
 	global $wpdb;
 	$student_courses = $wpdb->prefix . 'student_courses';
 	$teaching_evaluation = $wpdb->prefix . 'teaching_evaluation';

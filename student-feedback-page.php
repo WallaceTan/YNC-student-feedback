@@ -63,39 +63,7 @@ if ( is_user_logged_in() ) {
 				<?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') : ?>
 					<p>Thank you for completing this feedback form.</p>
 					<p><a href="<?php echo wp_logout_url($_SERVER['REQUEST_URI']); ?>" title="Logout">Logout</a></p>
-<?php
-/*
-print_r($_POST);
-Array
-(
-    [student_course_id] => 620
-    [course] => YHU1204: Rise and Fall of the British Empire
-    [A1] => Test A1
-    [A2] => A2
-    [A3] => A3
-    [B1] => 1
-    [B2] => 4
-    [P1_name] => Jessica Ratcliff
-    [P1_C1] => 1
-    [P1_C2] => 2
-    [P1_C3] => 3
-    [P1_C4] => 4
-    [P1_C5] => 5
-    [P1_C6a] => 1
-    [P1_C6b] => 2
-    [P2_name] => Jessica Hanser
-    [P2_C1] => 1
-    [P2_C2] => 2
-    [P2_C3] => 3
-    [P2_C4] => 4
-    [P2_C5] => 5
-    [P2_C6a] => 0
-    [D1] => Test D
-    [submit] => Submit
-)
-*/
-insert_teaching_evaluation();
-?>
+				<?php insert_teaching_evaluation(); ?>
 				<?php endif ?>
 			<?php else: ?>
 				<p>All evaluations completed!</p>
